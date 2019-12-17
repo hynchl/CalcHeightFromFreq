@@ -1,0 +1,157 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Beam Formula"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import math\n",
+    "\n",
+    "# change unit\n",
+    "def mm_to_m(l):\n",
+    "    return l/1000"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Material Characteristics\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#for ABS. If you want to use other material, change `rho` and `E`\n",
+    "rho = 1195 #density, kg/m^3\n",
+    "E = 1.08e+09 # elastic modulus, N/m^2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Calculation"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# fixed-fixed beam\n",
+    "k = 4.730 #[4.730, 7.853, 10.996, 14.137]\n",
+    "c = 39.5"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "ration_measured = 1 # you can get this value from the frequency of the printed model\n",
+    "note = {\n",
+    "    'c1': 261.6256 * ration_measured,\n",
+    "    'd1': 293.6648 * ration_measured,\n",
+    "    'e1': 329.6276 * ration_measured,\n",
+    "    'f1': 349.2282 * ration_measured,\n",
+    "    'g1': 391.9954 * ration_measured,\n",
+    "    'a1': 440 * ration_measured,\n",
+    "    'b1': 493.8833 * ration_measured,\n",
+    "    'c2': 523.2511 * ration_measured,\n",
+    "    'd2': 587.33 * ration_measured,\n",
+    "    'e2': 659.26 * ration_measured,\n",
+    "    'f2': 698.46 * ration_measured,\n",
+    "    'g2': 784 * ration_measured,\n",
+    "    'a2': 880 * ration_measured,\n",
+    "    'b2': 987.77 * ration_measured\n",
+    "}\n",
+    "\n",
+    "\n",
+    "def get_height_from_freq_and_len(frequency, length) :\n",
+    "    height = math.sqrt(48 * pow(length, 4) * pow(math.pi, 2) * pow(frequency, 2) * rho / (E * pow(k, 4)))\n",
+    "    print(height * 1000)\n",
+    "    return height\n",
+    "\n",
+    "def get_height_from_note_and_len(note_name, length) :\n",
+    "    global note\n",
+    "    frequency = note[note_name]\n",
+    "    height = math.sqrt(48 * pow(length, 4) * pow(math.pi, 2) * pow(frequency, 2) * rho / (E * pow(k, 4)))\n",
+    "    print(note_name, \" : \", height * 1000)\n",
+    "    return height\n",
+    "\n",
+    "def get_octave(length, note):\n",
+    "    for key in note:\n",
+    "        get_height_from_note_and_len(key, mm_to_m(length))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "c1  :  0.9183212672478461\n",
+      "d1  :  1.0307807465404197\n",
+      "e1  :  1.157012292955529\n",
+      "f1  :  1.2258115535432472\n",
+      "g1  :  1.3759269447765292\n",
+      "a1  :  1.544425918522699\n",
+      "b1  :  1.733559475558004\n",
+      "c2  :  1.8366421834898012\n",
+      "d2  :  2.0615628971044018\n",
+      "e2  :  2.314041434193806\n",
+      "f2  :  2.451635743298555\n",
+      "g2  :  2.751886182094991\n",
+      "a2  :  3.088851837045398\n",
+      "b2  :  3.467130885316287\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Use like this!\n",
+    "# You can get the height of each beam\n",
+    "get_octave(70, note)"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
